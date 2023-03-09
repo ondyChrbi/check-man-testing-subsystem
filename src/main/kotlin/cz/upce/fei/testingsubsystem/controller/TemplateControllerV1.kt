@@ -14,9 +14,7 @@ import java.net.URI
 @RestController
 @RequestMapping("/api/v1/template")
 @Tag(name = "Testing template endpoint", description = "Testing project template (V1)")
-class TemplateControllerV1(
-    private val templateService: TemplateService
-) {
+class TemplateControllerV1(private val templateService: TemplateService) {
     private var contextPath : String = ""
 
     @PostMapping("")
