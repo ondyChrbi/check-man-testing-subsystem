@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/checkman
+    username: checkman
+    password: checkman
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  servlet:
+    multipart:
+      location: /tmp/check-man/solutions
+
+server:
+  port: 9003
