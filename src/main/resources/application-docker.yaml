@@ -6,9 +6,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-  servlet:
-    multipart:
-      location: /tmp/check-man/solutions
 
 server:
   port: 9003
+
+check-man:
+  solution:
+    location: /tmp/check-man/solutions
+  template:
+    location: /tmp/check-man/templates
