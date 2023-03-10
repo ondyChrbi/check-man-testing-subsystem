@@ -11,11 +11,11 @@ import java.lang.annotation.Inherited
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Inherited
-@Operation(summary = "Upload new template project for future source code testing.", security = [SecurityRequirement(name = "bearerAuth")])
+@Operation(summary = "Upload solution for future testing.", security = [SecurityRequirement(name = "bearerAuth")])
 @ApiResponses(
     ApiResponse(
-        responseCode = "201",
-        description = "Created.",
+        responseCode = "204",
+        description = "Not content.",
         content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
     ),
     ApiResponse(
@@ -39,4 +39,4 @@ import java.lang.annotation.Inherited
         content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
     )
 )
-annotation class TemplateEndpointV1
+annotation class SolutionEndpointV1
