@@ -15,3 +15,6 @@ check-man:
     location: /tmp/check-man/solutions
   template:
     location: /tmp/check-man/templates
+
+jwt:
+  expiration: 2147483647

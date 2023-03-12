@@ -1,3 +1,7 @@
 logging:
   level:
     tracer: TRACE
+
+jwt:
+  secret: MIICXgIBAAKBgQCUMQwvELcqmvcsCfOVEGjqBFX8ckLYuNDq2PrbEw32XnXAnuQE
+  expiration: 28800000
