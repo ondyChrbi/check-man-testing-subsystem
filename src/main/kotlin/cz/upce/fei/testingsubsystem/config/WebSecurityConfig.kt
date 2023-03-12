@@ -22,6 +22,4 @@ class WebSecurityConfig(private val authenticationFilter: JwtAuthenticationFilte
             .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
-
-
 }

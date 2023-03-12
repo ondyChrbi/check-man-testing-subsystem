@@ -18,5 +18,7 @@ data class AppUser(
         joinColumns = [JoinColumn(name = "app_user_id")],
         inverseJoinColumns = [JoinColumn(name = "global_role_id")]
     )
-    var roles: MutableCollection<Role> = mutableListOf()
+    var roles: MutableCollection<Role> = mutableListOf(),
+    @field:OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    var solutions: MutableCollection<Solution> = mutableListOf()
 )

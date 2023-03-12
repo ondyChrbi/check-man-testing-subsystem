@@ -6,17 +6,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 data class UserDetailsImpl(
-    private val id: Long,
-    private val stagId: String,
-    private val locked: Boolean = false,
-    private val expired: Boolean = false,
-    private val authorities: MutableCollection<out GrantedAuthority> = mutableListOf()
+    val id: Long,
+    val stagId: String,
+    val locked: Boolean = false,
+    val expired: Boolean = false,
+    val roles: MutableCollection<out GrantedAuthority> = mutableListOf()
 ) : UserDetails {
     constructor(appUser: AppUser) : this(appUser.id!!, appUser.stagId, appUser.disabled,
-        authorities = appUser.roles.map { SimpleGrantedAuthority(it.name) }.toMutableList())
+        roles = appUser.roles.map { SimpleGrantedAuthority(it.name) }.toMutableList())
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return authorities
+        return roles
     }
 
     override fun getPassword(): String {

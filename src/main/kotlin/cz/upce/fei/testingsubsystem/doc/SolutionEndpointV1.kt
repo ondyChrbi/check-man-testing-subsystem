@@ -1,7 +1,9 @@
 package cz.upce.fei.testingsubsystem.doc
 
+import cz.upce.fei.testingsubsystem.dto.SolutionDtoV1
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -14,9 +16,12 @@ import java.lang.annotation.Inherited
 @Operation(summary = "Upload solution for future testing.", security = [SecurityRequirement(name = "bearerAuth")])
 @ApiResponses(
     ApiResponse(
-        responseCode = "204",
-        description = "Not content.",
-        content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
+        responseCode = "200",
+        description = "Created entity with id.",
+        content = [Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = Schema(implementation = SolutionDtoV1::class)
+        )]
     ),
     ApiResponse(
         responseCode = "400",
