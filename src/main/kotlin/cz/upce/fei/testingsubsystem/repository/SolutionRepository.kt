@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SolutionRepository : JpaRepository<Solution, Long> {
-
+    fun findFirstByTestStatusIdEqualsOrderByUploadDateAsc(testStatusId: Long) : Solution?
 }

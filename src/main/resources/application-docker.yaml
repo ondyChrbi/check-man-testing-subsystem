@@ -15,6 +15,10 @@ check-man:
     location: /tmp/check-man/solutions
   template:
     location: /tmp/check-man/templates
+  playground:
+    location: /tmp/check-man/playground
+  docker-files:
+    location: /tmp/check-man/docker-files
 
 jwt:
   expiration: 2147483647

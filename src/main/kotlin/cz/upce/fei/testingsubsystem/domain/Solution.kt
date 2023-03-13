@@ -30,4 +30,22 @@ data class Solution(
         const val DEFAULT_STATUS = 3L
         const val DEFAULT_TESTING_STATUS = 0L
     }
+
+    enum class TestStatus(val id: Long) {
+        WAITING_TO_TEST(0L),
+        RUNNING(1L),
+        FINISHED(2L),
+        ERROR(3L);
+
+        companion object {
+            val IDS_MAP = mapOf(
+                0L to WAITING_TO_TEST,
+                1L to RUNNING,
+                2L to FINISHED,
+                3L to ERROR
+            )
+
+            fun getById(id: Long) = values()[id.toInt()]
+        }
+    }
 }

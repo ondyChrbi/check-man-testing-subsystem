@@ -4,26 +4,27 @@ import cz.upce.fei.testingsubsystem.doc.TemplateEndpointV1
 import cz.upce.fei.testingsubsystem.service.TemplateService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.net.URI
 
 @RestController
-@RequestMapping("/api/v1/template")
+@RequestMapping("/api/v1")
 @Tag(name = "Testing template endpoint", description = "Testing project template (V1)")
 class TemplateControllerV1(private val templateService: TemplateService) {
     private var contextPath : String = ""
 
-    @PostMapping("")
+    @PostMapping("/challenge/{challengeId}/template")
     @TemplateEndpointV1
-    fun add(@RequestParam("file") file: MultipartFile): ResponseEntity<*> {
-        val type = TemplateService.Type.TEMPLATE
-        val fileName = templateService.add(file, type)
+    fun add(@PathVariable challengeId: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
+        val result = templateService.add(file, challengeId)
 
-        return ResponseEntity.created(URI("${contextPath}/${type.toString().lowercase()}/${fileName}"))
-            .build<String>()
+        return ResponseEntity.ok(result.toDto())
+    }
+
+    @PutMapping("/template/{id}/dockerFile")
+    fun addDocker(@PathVariable id: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
+        val result = templateService.addDockerFile(id, file)
+
+        return ResponseEntity.ok(result.toDto())
     }
 }

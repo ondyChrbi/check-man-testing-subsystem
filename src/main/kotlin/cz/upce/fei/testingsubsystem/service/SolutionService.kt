@@ -31,7 +31,7 @@ class SolutionService(
 
     private fun save(file: MultipartFile): String {
         val type = TemplateService.Type.SOLUTION
-        val fileName = templateService.add(file, type)
+        val fileName = templateService.add(file, type).fileName
 
         return "${contextPath}/${type.toString().lowercase()}/${fileName}"
     }
