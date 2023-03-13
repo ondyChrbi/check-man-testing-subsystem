@@ -26,4 +26,10 @@ data class TestConfiguration(
             id = id!!, templatePath = templatePath, dockerFilePath = dockerFilePath, active = active, creationDate = creationDate, updateDate = updateDate
         )
     }
+
+    override fun toString(): String {
+        return "TestConfiguration(id=$id, templatePath=$templatePath, dockerFilePath=$dockerFilePath, active=$active, creationDate=$creationDate, updateDate=$updateDate)"
+    }
+
+
 }

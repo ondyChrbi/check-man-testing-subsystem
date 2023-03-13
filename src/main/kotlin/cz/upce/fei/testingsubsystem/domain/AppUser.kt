@@ -21,4 +21,8 @@ data class AppUser(
     var roles: MutableCollection<Role> = mutableListOf(),
     @field:OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     var solutions: MutableCollection<Solution> = mutableListOf()
-)
+) {
+    override fun toString(): String {
+        return "AppUser(id=$id, stagId='$stagId', mail='$mail', displayName='$displayName', registrationDate=$registrationDate, lastAccessDate=$lastAccessDate, disabled=$disabled)"
+    }
+}

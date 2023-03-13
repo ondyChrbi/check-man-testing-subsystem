@@ -26,6 +26,10 @@ data class Solution(
         )
     }
 
+    override fun toString(): String {
+        return "Solution(id=$id, uploadDate=$uploadDate, path='$path', statusId=$statusId, testStatusId=$testStatusId)"
+    }
+
     private companion object {
         const val DEFAULT_STATUS = 3L
         const val DEFAULT_TESTING_STATUS = 0L

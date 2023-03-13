@@ -16,4 +16,8 @@ data class Challenge (
     var published: Boolean = false,
     @field:OneToOne(mappedBy = "challenge")
     var testConfiguration: TestConfiguration? = null
-)
+) {
+    override fun toString(): String {
+        return "Challenge(id=$id, name='$name', description='$description', deadlineDate=$deadlineDate, startDate=$startDate, active=$active, published=$published)"
+    }
+}
