@@ -22,3 +22,7 @@ check-man:
 
 jwt:
   expiration: 2147483647
+
+logging:
+  level:
+    cz.upce.fei.testingsubsystem.service: DEBUG
