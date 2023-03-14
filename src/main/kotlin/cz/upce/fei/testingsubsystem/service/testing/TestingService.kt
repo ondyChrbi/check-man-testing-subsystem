@@ -3,6 +3,7 @@ package cz.upce.fei.testingsubsystem.service.testing
 import cz.upce.fei.testingsubsystem.domain.Solution
 import cz.upce.fei.testingsubsystem.domain.TestConfiguration
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
+import cz.upce.fei.testingsubsystem.service.testing.docker.DockerService
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
 import org.apache.commons.compress.utils.IOUtils
@@ -19,7 +20,10 @@ import java.nio.file.Paths
 import java.util.*
 
 @Service
-class TestingService(private val testConfigurationRepository: TestConfigurationRepository) {
+class TestingService(
+    private val testConfigurationRepository: TestConfigurationRepository,
+    private val dockerService: DockerService
+    ) {
     private val logger = LoggerFactory.getLogger(TestingService::class.java)
 
     @Value("\${check-man.playground.location}")
@@ -63,7 +67,8 @@ class TestingService(private val testConfigurationRepository: TestConfigurationR
         val unzipTemplateLocation = unzipFile(templateZipLocation, testingPlaygroundDir.resolve(Paths.get(TEMPLATE_DIR_NAME)))
         logger.debug("Zip $templateZipLocation unarchived to location $unzipTemplateLocation")
 
-        Files.copy(dockerFilePath, testingPlaygroundDir.resolve(DOCKER_FILE_NAME))
+        val dockerFileLocation = Files.copy(dockerFilePath, testingPlaygroundDir.resolve(DOCKER_FILE_NAME))
+        dockerService.gradleTest(dockerFileLocation)
     }
 
     private fun unzipFile(zipFilePath: Path, destDirPath: Path, deleteSource: Boolean = true): Path {
