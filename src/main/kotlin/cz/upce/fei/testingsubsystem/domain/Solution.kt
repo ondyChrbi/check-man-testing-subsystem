@@ -18,7 +18,9 @@ data class Solution(
     @field:Column var testStatusId : Long = DEFAULT_TESTING_STATUS,
     @field:ManyToOne(fetch = FetchType.EAGER)
     @field:JoinColumn(name = "challenge_id", nullable = false)
-    var challenge : Challenge
+    var challenge : Challenge,
+    @field:OneToMany(mappedBy = "solution", fetch = FetchType.LAZY)
+    var testResults: List<TestResult> = emptyList()
 ) {
     fun toDto(): SolutionDtoV1 {
         return SolutionDtoV1(

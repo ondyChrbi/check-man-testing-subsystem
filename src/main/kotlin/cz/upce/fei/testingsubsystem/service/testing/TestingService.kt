@@ -2,7 +2,9 @@ package cz.upce.fei.testingsubsystem.service.testing
 
 import cz.upce.fei.testingsubsystem.domain.Solution
 import cz.upce.fei.testingsubsystem.domain.TestConfiguration
+import cz.upce.fei.testingsubsystem.domain.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
+import cz.upce.fei.testingsubsystem.repository.TestResultRepository
 import cz.upce.fei.testingsubsystem.service.testing.docker.DockerService
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
@@ -22,8 +24,9 @@ import java.util.*
 @Service
 class TestingService(
     private val testConfigurationRepository: TestConfigurationRepository,
-    private val dockerService: DockerService
-    ) {
+    private val dockerService: DockerService,
+    private val testResultRepository: TestResultRepository
+) {
     private val logger = LoggerFactory.getLogger(TestingService::class.java)
 
     @Value("\${check-man.playground.location}")
@@ -35,11 +38,18 @@ class TestingService(
         logger.info("New directory for playground created at: $playgroundLocation")
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = [Throwable::class])
     fun test(solution: Solution) {
         val configuration = testConfigurationRepository.findBySolution(solution)
 
         val playgroundLocation = preparePlayground(solution, configuration)
+        val testResult = initNewTestResult(solution)
+
+        try {
+            dockerService.gradleTest(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult)
+        } catch (e: Exception) {
+            logError(testResult, e)
+        }
     }
 
     private fun preparePlayground(solution: Solution, configuration: TestConfiguration): Path {
@@ -53,7 +63,7 @@ class TestingService(
         return testingPlaygroundDir
     }
 
-    private fun copyTemplateToPlayground(configuration: TestConfiguration, testingPlaygroundDir: Path) {
+    private fun copyTemplateToPlayground(configuration: TestConfiguration, testingPlaygroundDir: Path): Path {
         if (configuration.templatePath == null) { throw TemplateFileNotSetException(configuration) }
         if (configuration.dockerFilePath == null) { throw DockerFileNotSetException(configuration) }
 
@@ -67,8 +77,9 @@ class TestingService(
         val unzipTemplateLocation = unzipFile(templateZipLocation, testingPlaygroundDir.resolve(Paths.get(TEMPLATE_DIR_NAME)))
         logger.debug("Zip $templateZipLocation unarchived to location $unzipTemplateLocation")
 
-        val dockerFileLocation = Files.copy(dockerFilePath, testingPlaygroundDir.resolve(DOCKER_FILE_NAME))
-        dockerService.gradleTest(dockerFileLocation)
+        Files.copy(dockerFilePath, testingPlaygroundDir.resolve(DOCKER_FILE_NAME))
+
+        return testingPlaygroundDir
     }
 
     private fun unzipFile(zipFilePath: Path, destDirPath: Path, deleteSource: Boolean = true): Path {
@@ -128,6 +139,18 @@ class TestingService(
         logger.debug("Zip $zipLocation unarchived to location $unzipLocation")
 
         return location
+    }
+
+    @Transactional
+    private fun logError(testResult: TestResult, e: Exception) {
+        testResult.testStatusId = Solution.TestStatus.ERROR.id
+        testResult.log += e.message
+        testResultRepository.save(testResult)
+    }
+
+    @Transactional
+    protected fun initNewTestResult(solution: Solution): TestResult {
+        return testResultRepository.save(TestResult(solution = solution))
     }
 
     private companion object {
