@@ -17,6 +17,7 @@ class DockerApiConfig {
         return HostConfig.newHostConfig()
             .withAutoRemove(false)
             .withPublishAllPorts(true)
+            .withVolumesFrom()
             .withNetworkMode("bridge")
     }
 }

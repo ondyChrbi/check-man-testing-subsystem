@@ -5,7 +5,7 @@ import cz.upce.fei.testingsubsystem.domain.TestConfiguration
 import cz.upce.fei.testingsubsystem.domain.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.repository.TestResultRepository
-import cz.upce.fei.testingsubsystem.service.testing.docker.DockerService
+import cz.upce.fei.testingsubsystem.component.testing.GradleModuleTest
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
 import org.apache.commons.compress.utils.IOUtils
@@ -24,10 +24,10 @@ import java.util.*
 @Service
 class TestingService(
     private val testConfigurationRepository: TestConfigurationRepository,
-    private val dockerService: DockerService,
+    private val gradleModuleTest: GradleModuleTest,
     private val testResultRepository: TestResultRepository
 ) {
-    private val logger = LoggerFactory.getLogger(TestingService::class.java)
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @Value("\${check-man.playground.location}")
     private lateinit var playgroundFilesLocation : String
@@ -46,7 +46,7 @@ class TestingService(
         val testResult = initNewTestResult(solution)
 
         try {
-            dockerService.gradleTest(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult)
+            gradleModuleTest.test(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult)
         } catch (e: Exception) {
             logError(testResult, e)
         }
@@ -142,7 +142,7 @@ class TestingService(
     }
 
     @Transactional
-    private fun logError(testResult: TestResult, e: Exception) {
+    protected fun logError(testResult: TestResult, e: Exception) {
         testResult.testStatusId = Solution.TestStatus.ERROR.id
         testResult.log += e.message
         testResultRepository.save(testResult)

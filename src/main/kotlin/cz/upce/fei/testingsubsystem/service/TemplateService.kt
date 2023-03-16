@@ -22,7 +22,7 @@ class TemplateService(
     private val challengeService: ChallengeService,
     private val testConfigurationRepository: TestConfigurationRepository
 ) {
-    private val logger = LoggerFactory.getLogger(TemplateService::class.java)
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     @Value("\${check-man.template.location}")
     private lateinit var templateFilesLocation : String
@@ -35,13 +35,13 @@ class TemplateService(
 
     @PostConstruct
     fun init() {
-        var templateLocation = Files.createDirectories(Paths.get(templateFilesLocation))
+        val templateLocation = Files.createDirectories(Paths.get(templateFilesLocation))
         logger.info("New directory for templates created at: $templateLocation")
 
-        var solutionLocation = Files.createDirectories(Paths.get(solutionFilesLocation))
+        val solutionLocation = Files.createDirectories(Paths.get(solutionFilesLocation))
         logger.info("New directory for templates created at: $solutionLocation")
 
-        var dockerFilesLocation = Files.createDirectories(Paths.get(dockerFilesLocation))
+        val dockerFilesLocation = Files.createDirectories(Paths.get(dockerFilesLocation))
         logger.info("New directory for templates created at: $dockerFilesLocation")
     }
 
@@ -60,7 +60,7 @@ class TemplateService(
     fun add(file: MultipartFile, type: Type = Type.TEMPLATE): Path {
         GradleValidator.checkFileValidity(file)
 
-        val locationToSave = createLocationToSave(file)
+        val locationToSave = createLocationToSave(file, type)
         Files.copy(file.inputStream, locationToSave, StandardCopyOption.REPLACE_EXISTING)
         logger.info("$type saved to location ${locationToSave.toUri()}")
 

@@ -8,10 +8,15 @@ jwt:
 
 check-man:
   solution:
-    location: /tmp/check-man/solutions
+    location: /tmp/check-man/solution
   template:
-    location: /tmp/check-man/templates
+    location: /tmp/check-man/template
   playground:
     location: /tmp/check-man/playground
   docker-files:
     location: /tmp/check-man/docker-files
+
+  modules:
+    gradle:
+      volume:
+        container-path: /playground/app/build/test-results
