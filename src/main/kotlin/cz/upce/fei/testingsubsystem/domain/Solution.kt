@@ -20,7 +20,9 @@ data class Solution(
     @field:JoinColumn(name = "challenge_id", nullable = false)
     var challenge : Challenge,
     @field:OneToMany(mappedBy = "solution", fetch = FetchType.LAZY)
-    var testResults: List<TestResult> = emptyList()
+    var testResults: List<TestResult> = emptyList(),
+    @field:OneToOne(fetch = FetchType.EAGER, mappedBy = "solution")
+    var review: Review? = null
 ) {
     fun toDto(): SolutionDtoV1 {
         return SolutionDtoV1(

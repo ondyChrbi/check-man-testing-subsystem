@@ -1,10 +1,12 @@
-package cz.upce.fei.testingsubsystem.service
+package cz.upce.fei.testingsubsystem.service.solution
 
 import cz.upce.fei.testingsubsystem.domain.AppUser
 import cz.upce.fei.testingsubsystem.domain.Challenge
 import cz.upce.fei.testingsubsystem.domain.Solution
 import cz.upce.fei.testingsubsystem.repository.ChallengeRepository
 import cz.upce.fei.testingsubsystem.repository.SolutionRepository
+import cz.upce.fei.testingsubsystem.service.RecordNotFoundException
+import cz.upce.fei.testingsubsystem.service.TemplateService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -16,8 +18,6 @@ class SolutionService(
     private val challengeRepository: ChallengeRepository,
     private val templateService: TemplateService
 ) {
-    private var contextPath : String = ""
-
     @Throws(RecordNotFoundException::class)
     @Transactional
     fun add(challengeId: Long, appUser: AppUser, file: MultipartFile): Solution {

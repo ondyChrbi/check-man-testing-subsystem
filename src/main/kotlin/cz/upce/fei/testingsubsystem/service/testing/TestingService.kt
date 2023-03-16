@@ -5,7 +5,9 @@ import cz.upce.fei.testingsubsystem.domain.TestConfiguration
 import cz.upce.fei.testingsubsystem.domain.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.repository.TestResultRepository
-import cz.upce.fei.testingsubsystem.component.testing.GradleModuleTest
+import cz.upce.fei.testingsubsystem.component.testing.TestModule
+import cz.upce.fei.testingsubsystem.domain.Review
+import cz.upce.fei.testingsubsystem.service.solution.ReviewService
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
 import org.apache.commons.compress.utils.IOUtils
@@ -23,8 +25,8 @@ import java.util.*
 
 @Service
 class TestingService(
+    private val reviewService: ReviewService,
     private val testConfigurationRepository: TestConfigurationRepository,
-    private val gradleModuleTest: GradleModuleTest,
     private val testResultRepository: TestResultRepository
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -39,17 +41,26 @@ class TestingService(
     }
 
     @Transactional(noRollbackFor = [Throwable::class])
-    fun test(solution: Solution) {
+    fun test(solution: Solution, testModule: TestModule) {
         val configuration = testConfigurationRepository.findBySolution(solution)
-
         val playgroundLocation = preparePlayground(solution, configuration)
+
+        val resultLocation = playgroundLocation.resolve(Paths.get(RESULT_DIR_NAME))
         val testResult = initNewTestResult(solution)
 
-        try {
-            gradleModuleTest.test(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult)
-        } catch (e: Exception) {
-            logError(testResult, e)
-        }
+        testModule.test(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult, resultLocation)
+        logger.info("Testing finished for $solution")
+
+        val review = saveFeedbacks(resultLocation, solution, testModule)
+        logger.info("Feedbacks from automating testing $solution were saved to $review")
+    }
+
+    @Transactional
+    protected fun saveFeedbacks(resultLocation: Path, solution: Solution, testModule: TestModule): Review {
+        val review = reviewService.createReviewIfNotExist(solution)
+        val feedbacks = testModule.resultToFeedbacks(resultLocation, solution)
+
+        return reviewService.assignFeedbacks(review, feedbacks)
     }
 
     private fun preparePlayground(solution: Solution, configuration: TestConfiguration): Path {
@@ -142,13 +153,6 @@ class TestingService(
     }
 
     @Transactional
-    protected fun logError(testResult: TestResult, e: Exception) {
-        testResult.testStatusId = Solution.TestStatus.ERROR.id
-        testResult.log += e.message
-        testResultRepository.save(testResult)
-    }
-
-    @Transactional
     protected fun initNewTestResult(solution: Solution): TestResult {
         return testResultRepository.save(TestResult(solution = solution))
     }
@@ -157,5 +161,6 @@ class TestingService(
         const val DOCKER_FILE_NAME = "Dockerfile"
         const val SOLUTION_DIR_NAME = "solution"
         const val TEMPLATE_DIR_NAME = "template"
+        const val RESULT_DIR_NAME = "result"
     }
 }

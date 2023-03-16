@@ -17,6 +17,11 @@ check-man:
     location: /tmp/check-man/docker-files
 
   modules:
+    container:
+      max-memory: 536870912
     gradle:
       volume:
         container-path: /playground/app/build/test-results
+      container:
+        timeout: 50
+

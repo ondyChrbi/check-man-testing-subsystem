@@ -1,7 +1,7 @@
 package cz.upce.fei.testingsubsystem.controller
 
 import cz.upce.fei.testingsubsystem.doc.SolutionEndpointV1
-import cz.upce.fei.testingsubsystem.service.SolutionService
+import cz.upce.fei.testingsubsystem.service.solution.SolutionService
 import cz.upce.fei.testingsubsystem.service.authentication.UserAuthenticationService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity

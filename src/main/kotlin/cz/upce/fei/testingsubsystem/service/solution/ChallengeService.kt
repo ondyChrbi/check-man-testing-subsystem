@@ -1,4 +1,4 @@
-package cz.upce.fei.testingsubsystem.service
+package cz.upce.fei.testingsubsystem.service.solution
 
 import cz.upce.fei.testingsubsystem.domain.Challenge
 import cz.upce.fei.testingsubsystem.repository.ChallengeRepository

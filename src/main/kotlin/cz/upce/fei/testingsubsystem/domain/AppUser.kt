@@ -6,12 +6,12 @@ import java.time.LocalDateTime
 @Entity
 data class AppUser(
     @field:Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
-    var stagId: String = "",
-    var mail: String = "",
-    var displayName: String = "",
-    var registrationDate: LocalDateTime = LocalDateTime.now(),
-    var lastAccessDate: LocalDateTime = LocalDateTime.now(),
-    var disabled: Boolean = false,
+    @field:Column var stagId: String = "",
+    @field:Column var mail: String = "",
+    @field:Column var displayName: String = "",
+    @field:Column var registrationDate: LocalDateTime = LocalDateTime.now(),
+    @field:Column var lastAccessDate: LocalDateTime = LocalDateTime.now(),
+    @field:Column var disabled: Boolean = false,
     @field:ManyToMany(fetch = FetchType.EAGER)
     @field:JoinTable(
         name = "app_user_global_role",

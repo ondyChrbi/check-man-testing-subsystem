@@ -4,6 +4,7 @@ import cz.upce.fei.testingsubsystem.domain.Challenge
 import cz.upce.fei.testingsubsystem.domain.TestConfiguration
 import cz.upce.fei.testingsubsystem.lib.GradleValidator
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
+import cz.upce.fei.testingsubsystem.service.solution.ChallengeService
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
