@@ -1,4 +1,4 @@
-package cz.upce.fei.testingsubsystem.component
+package cz.upce.fei.testingsubsystem.component.docker
 
 import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.core.DefaultDockerClientConfig

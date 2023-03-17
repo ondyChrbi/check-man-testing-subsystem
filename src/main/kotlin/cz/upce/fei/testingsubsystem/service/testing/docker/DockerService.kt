@@ -107,6 +107,22 @@ class DockerService(
         return image
     }
 
+    fun isAvailable() : Boolean {
+        val dockerClient = applicationContext.getBean(DockerClient::class.java)
+
+        try {
+            dockerClient.pingCmd().exec()
+        } catch (e: Exception) {
+            return false
+        } finally {
+            dockerClient.close()
+        }
+
+        return true
+    }
+
+    fun isNotAvailable() = !isAvailable()
+
     @Transactional
     protected fun saveLog(testResult: TestResult, log: StringBuffer) {
         testResult.log = log.toString()
