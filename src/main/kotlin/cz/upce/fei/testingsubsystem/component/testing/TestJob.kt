@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 import java.util.concurrent.TimeUnit
 
 @Component
@@ -21,29 +20,22 @@ class TestJob(
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     fun runTesting() {
         logger.info("Checking new solutions to test")
-        val solutionToTest = solutionRepository.findFirstByTestStatusIdEqualsOrderByUploadDateAsc(Solution.TestStatus.WAITING_TO_TEST.id)
+        val solutionToTest = solutionRepository.findFirsToToTest(Solution.TestStatus.WAITING_TO_TEST.id)
 
         if (solutionToTest != null) {
             logger.debug("Prepare to test $solutionToTest solution...")
 
+            val testResult = testingService.initNewTestResult(solutionToTest)
+            val testModule = applicationContext.getBean(DEFAULT_TEST_MODULE)
+
             try {
-                updateStatus(solutionToTest, Solution.TestStatus.RUNNING)
-
-                val testModule = applicationContext.getBean(DEFAULT_TEST_MODULE)
-                testingService.test(solutionToTest, testModule)
-
-                updateStatus(solutionToTest, Solution.TestStatus.FINISHED)
-            } catch (e: Throwable) {
+                testingService.test(solutionToTest, testModule, testResult)
+                testingService.updateStatus(testResult, Solution.TestStatus.FINISHED)
+            } catch (e: Exception) {
                 logger.error(e.message)
-                updateStatus(solutionToTest, Solution.TestStatus.ERROR)
+                testingService.updateStatus(testResult, Solution.TestStatus.ERROR)
             }
         }
-    }
-
-    @Transactional
-    protected fun updateStatus(solution: Solution, status: Solution.TestStatus) {
-        solution.testStatusId = status.id
-        solutionRepository.saveAndFlush(solution)
     }
 
     private companion object {

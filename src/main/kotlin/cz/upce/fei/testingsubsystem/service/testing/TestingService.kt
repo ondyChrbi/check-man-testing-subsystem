@@ -41,18 +41,29 @@ class TestingService(
     }
 
     @Transactional(noRollbackFor = [Throwable::class])
-    fun test(solution: Solution, testModule: TestModule) {
+    fun test(solution: Solution, testModule: TestModule, testResult: TestResult = initNewTestResult(solution)) {
         val configuration = testConfigurationRepository.findBySolution(solution)
         val playgroundLocation = preparePlayground(solution, configuration)
 
         val resultLocation = playgroundLocation.resolve(Paths.get(RESULT_DIR_NAME))
-        val testResult = initNewTestResult(solution)
 
+        updateStatus(testResult, Solution.TestStatus.RUNNING)
         testModule.test(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult, resultLocation)
         logger.info("Testing finished for $solution")
 
         val review = saveFeedbacks(resultLocation, solution, testModule)
         logger.info("Feedbacks from automating testing $solution were saved to $review")
+    }
+
+    @Transactional
+    fun initNewTestResult(solution: Solution): TestResult {
+        return testResultRepository.save(TestResult(solution = solution))
+    }
+
+    @Transactional(noRollbackFor = [Exception::class])
+    fun updateStatus(testResult: TestResult, status: Solution.TestStatus = Solution.TestStatus.WAITING_TO_TEST): TestResult {
+        testResult.testStatusId = status.id
+        return testResultRepository.save(testResult)
     }
 
     @Transactional
@@ -150,11 +161,6 @@ class TestingService(
         logger.debug("Zip $zipLocation unarchived to location $unzipLocation")
 
         return location
-    }
-
-    @Transactional
-    protected fun initNewTestResult(solution: Solution): TestResult {
-        return testResultRepository.save(TestResult(solution = solution))
     }
 
     private companion object {

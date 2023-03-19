@@ -37,3 +37,4 @@ jwt:
 logging:
   level:
     cz.upce.fei.testingsubsystem.service: DEBUG
+    org.hibernate: DEBUG

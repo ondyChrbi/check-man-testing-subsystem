@@ -19,7 +19,7 @@ data class Solution(
     @field:ManyToOne(fetch = FetchType.EAGER)
     @field:JoinColumn(name = "challenge_id", nullable = false)
     var challenge : Challenge,
-    @field:OneToMany(mappedBy = "solution", fetch = FetchType.LAZY)
+    @field:OneToMany(mappedBy = "solution", fetch = FetchType.EAGER)
     var testResults: List<TestResult> = emptyList(),
     @field:OneToOne(fetch = FetchType.EAGER, mappedBy = "solution")
     var review: Review? = null
