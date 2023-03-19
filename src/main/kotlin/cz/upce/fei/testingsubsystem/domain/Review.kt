@@ -14,4 +14,8 @@ data class Review (
     var solution: Solution? = null,
     @field:ManyToMany(mappedBy = "reviews", fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     var feedbacks: MutableCollection<Feedback> = mutableSetOf()
-)
+) {
+    override fun toString(): String {
+        return "Review(id=$id, description='$description', active=$active, published=$published)"
+    }
+}

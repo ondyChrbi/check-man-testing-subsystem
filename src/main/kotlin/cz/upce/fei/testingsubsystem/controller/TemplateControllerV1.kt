@@ -1,5 +1,6 @@
 package cz.upce.fei.testingsubsystem.controller
 
+import cz.upce.fei.testingsubsystem.doc.DockerEndpointV1
 import cz.upce.fei.testingsubsystem.doc.TemplateEndpointV1
 import cz.upce.fei.testingsubsystem.service.TemplateService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -11,10 +12,9 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/v1")
 @Tag(name = "Testing template endpoint", description = "Testing project template (V1)")
 class TemplateControllerV1(private val templateService: TemplateService) {
-    private var contextPath : String = ""
-
     @PostMapping("/challenge/{challengeId}/template")
     @TemplateEndpointV1
+    @CrossOrigin
     fun add(@PathVariable challengeId: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
         val result = templateService.add(file, challengeId)
 
@@ -22,6 +22,8 @@ class TemplateControllerV1(private val templateService: TemplateService) {
     }
 
     @PutMapping("/template/{id}/dockerFile")
+    @DockerEndpointV1
+    @CrossOrigin
     fun addDocker(@PathVariable id: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
         val result = templateService.addDockerFile(id, file)
 

@@ -6,6 +6,7 @@ import cz.upce.fei.testingsubsystem.service.authentication.UserAuthenticationSer
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,6 +24,7 @@ class SolutionControllerV1(
 ) {
     @PostMapping("")
     @SolutionEndpointV1
+    @CrossOrigin
     fun add(@PathVariable challengeId: Long, @RequestParam("file") file: MultipartFile, authentication: Authentication): ResponseEntity<*> {
         val result = solutionService.add(challengeId, authenticationService.extractAuthenticateUser(authentication), file)
         return ResponseEntity.ok(result.toDto())

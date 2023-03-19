@@ -4,6 +4,7 @@ import com.github.dockerjava.api.DockerClient
 import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.command.BuildImageCmd
 import com.github.dockerjava.api.command.BuildImageResultCallback
+import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.WaitContainerResultCallback
 import com.github.dockerjava.api.model.*
 import cz.upce.fei.testingsubsystem.component.testing.GradleModule
@@ -90,8 +91,19 @@ class DockerService(
         dockerClient.waitContainerCmd(container.id).exec(object : WaitContainerResultCallback(){})
             .awaitCompletion()
 
-        dockerClient.close()
+        close(dockerClient, container, imageId)
         return container.id
+    }
+
+    private fun close(dockerClient: DockerClient, container: CreateContainerResponse, imageId: String, ) {
+        dockerClient.removeContainerCmd(container.id)
+            .withForce(true)
+            .exec()
+        dockerClient.removeImageCmd(imageId)
+            .withForce(true)
+            .exec()
+
+        dockerClient.close()
     }
 
     fun buildImage(dockerFile: Path, imageName: String, testResult: TestResult?, log: StringBuffer = StringBuffer("")): String {
