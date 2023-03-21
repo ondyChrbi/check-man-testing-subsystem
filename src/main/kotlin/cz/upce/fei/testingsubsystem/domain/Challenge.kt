@@ -21,4 +21,34 @@ data class Challenge (
     override fun toString(): String {
         return "Challenge(id=$id, name='$name', description='$description', deadlineDate=$deadlineDate, startDate=$startDate, active=$active, published=$published)"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Challenge
+
+        if (id != other.id) return false
+        if (name != other.name) return false
+        if (description != other.description) return false
+        if (deadlineDate != other.deadlineDate) return false
+        if (startDate != other.startDate) return false
+        if (active != other.active) return false
+        if (published != other.published) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + (deadlineDate?.hashCode() ?: 0)
+        result = 31 * result + (startDate?.hashCode() ?: 0)
+        result = 31 * result + active.hashCode()
+        result = 31 * result + published.hashCode()
+        return result
+    }
+
+
 }

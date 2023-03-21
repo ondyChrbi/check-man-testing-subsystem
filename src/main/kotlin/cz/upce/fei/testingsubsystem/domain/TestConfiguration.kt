@@ -26,5 +26,31 @@ data class TestConfiguration(
         return "TestConfiguration(id=$id, templatePath=$templatePath, dockerFilePath=$dockerFilePath, active=$active, creationDate=$creationDate, updateDate=$updateDate)"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TestConfiguration
+
+        if (id != other.id) return false
+        if (templatePath != other.templatePath) return false
+        if (dockerFilePath != other.dockerFilePath) return false
+        if (active != other.active) return false
+        if (creationDate != other.creationDate) return false
+        if (updateDate != other.updateDate) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (templatePath?.hashCode() ?: 0)
+        result = 31 * result + (dockerFilePath?.hashCode() ?: 0)
+        result = 31 * result + active.hashCode()
+        result = 31 * result + creationDate.hashCode()
+        result = 31 * result + (updateDate?.hashCode() ?: 0)
+        return result
+    }
+
 
 }
