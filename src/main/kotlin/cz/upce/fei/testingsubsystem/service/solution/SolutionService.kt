@@ -1,8 +1,8 @@
 package cz.upce.fei.testingsubsystem.service.solution
 
-import cz.upce.fei.testingsubsystem.domain.AppUser
-import cz.upce.fei.testingsubsystem.domain.Challenge
-import cz.upce.fei.testingsubsystem.domain.Solution
+import cz.upce.fei.testingsubsystem.domain.user.AppUser
+import cz.upce.fei.testingsubsystem.domain.course.Challenge
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
 import cz.upce.fei.testingsubsystem.repository.ChallengeRepository
 import cz.upce.fei.testingsubsystem.repository.SolutionRepository
 import cz.upce.fei.testingsubsystem.service.RecordNotFoundException

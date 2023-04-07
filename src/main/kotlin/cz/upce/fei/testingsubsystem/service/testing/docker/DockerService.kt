@@ -8,8 +8,8 @@ import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.WaitContainerResultCallback
 import com.github.dockerjava.api.model.*
 import cz.upce.fei.testingsubsystem.component.testing.GradleModule
-import cz.upce.fei.testingsubsystem.domain.Solution
-import cz.upce.fei.testingsubsystem.domain.TestResult
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
+import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestResultRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

@@ -1,11 +1,11 @@
 package cz.upce.fei.testingsubsystem.repository
 
-import cz.upce.fei.testingsubsystem.domain.Solution
-import cz.upce.fei.testingsubsystem.domain.TestConfiguration
+import cz.upce.fei.testingsubsystem.domain.course.Challenge
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
+import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
-
 @Repository
 interface TestConfigurationRepository : JpaRepository<TestConfiguration, Long> {
     @Query("""
@@ -16,4 +16,6 @@ interface TestConfigurationRepository : JpaRepository<TestConfiguration, Long> {
         where s = :solution
     """)
     fun findBySolution(solution: Solution) : TestConfiguration
+
+    fun findAllByChallengeEquals(challenge: Challenge) : List<TestConfiguration>
 }

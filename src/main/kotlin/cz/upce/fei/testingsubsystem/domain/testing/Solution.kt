@@ -1,10 +1,13 @@
-package cz.upce.fei.testingsubsystem.domain
+package cz.upce.fei.testingsubsystem.domain.testing
 
+import cz.upce.fei.testingsubsystem.domain.user.AppUser
+import cz.upce.fei.testingsubsystem.domain.course.Challenge
 import cz.upce.fei.testingsubsystem.dto.SolutionDtoV1
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
+@Table
 data class Solution(
     @field:Id
     @field:GeneratedValue(strategy = GenerationType.IDENTITY)

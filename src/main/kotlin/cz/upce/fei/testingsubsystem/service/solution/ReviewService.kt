@@ -1,8 +1,8 @@
 package cz.upce.fei.testingsubsystem.service.solution
 
-import cz.upce.fei.testingsubsystem.domain.Feedback
-import cz.upce.fei.testingsubsystem.domain.Review
-import cz.upce.fei.testingsubsystem.domain.Solution
+import cz.upce.fei.testingsubsystem.domain.testing.Feedback
+import cz.upce.fei.testingsubsystem.domain.testing.Review
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
 import cz.upce.fei.testingsubsystem.repository.FeedbackRepository
 import cz.upce.fei.testingsubsystem.repository.ReviewRepository
 import org.springframework.stereotype.Service

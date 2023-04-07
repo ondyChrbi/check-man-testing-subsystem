@@ -1,6 +1,6 @@
 package cz.upce.fei.testingsubsystem.repository
 
-import cz.upce.fei.testingsubsystem.domain.TestResult
+import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

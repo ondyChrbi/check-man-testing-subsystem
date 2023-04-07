@@ -1,10 +1,11 @@
-package cz.upce.fei.testingsubsystem.domain
+package cz.upce.fei.testingsubsystem.domain.testing
 
 import cz.upce.fei.testingsubsystem.component.testing.JunitTestCase
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
+@Table
 data class Feedback(
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

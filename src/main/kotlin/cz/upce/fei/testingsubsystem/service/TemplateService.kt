@@ -1,7 +1,6 @@
 package cz.upce.fei.testingsubsystem.service
 
-import cz.upce.fei.testingsubsystem.domain.Challenge
-import cz.upce.fei.testingsubsystem.domain.TestConfiguration
+import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
 import cz.upce.fei.testingsubsystem.lib.GradleValidator
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.service.solution.ChallengeService
@@ -49,13 +48,14 @@ class TemplateService(
     @Transactional
     fun add(file: MultipartFile, challengeId: Long): TestConfiguration {
         val challenge = challengeService.findById(challengeId)
-            ?: throw RecordNotFoundException(Challenge::class.java, challengeId)
         val path = add(file)
 
-        return testConfigurationRepository.save(TestConfiguration(
+        return testConfigurationRepository.save(
+            TestConfiguration(
             templatePath = path.toString(),
             challenge = challenge
-        ))
+        )
+        )
     }
 
     fun add(file: MultipartFile, type: Type = Type.TEMPLATE): Path {
@@ -84,6 +84,13 @@ class TemplateService(
         testConfigurationRepository.saveAndFlush(configuration)
 
         return configuration
+    }
+
+    @Transactional
+    fun findAll(challengeId: Long): Collection<TestConfiguration> {
+        val challenge = challengeService.findById(challengeId)
+
+        return testConfigurationRepository.findAllByChallengeEquals(challenge)
     }
 
     private fun saveDockerFile(file: MultipartFile): Path {

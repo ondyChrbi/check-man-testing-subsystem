@@ -3,9 +3,9 @@ package cz.upce.fei.testingsubsystem.component.testing
 import com.github.dockerjava.api.model.Bind
 import com.github.dockerjava.api.model.Volume
 import cz.upce.fei.testingsubsystem.component.testing.JunitTestCase.Companion.parseStatus
-import cz.upce.fei.testingsubsystem.domain.Feedback
-import cz.upce.fei.testingsubsystem.domain.Solution
-import cz.upce.fei.testingsubsystem.domain.TestResult
+import cz.upce.fei.testingsubsystem.domain.testing.Feedback
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
+import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import cz.upce.fei.testingsubsystem.service.testing.docker.DockerService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

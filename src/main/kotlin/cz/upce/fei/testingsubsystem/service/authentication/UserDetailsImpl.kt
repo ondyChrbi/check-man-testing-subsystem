@@ -1,6 +1,6 @@
 package cz.upce.fei.testingsubsystem.service.authentication
 
-import cz.upce.fei.testingsubsystem.domain.AppUser
+import cz.upce.fei.testingsubsystem.domain.user.AppUser
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -13,7 +13,7 @@ data class UserDetailsImpl(
     val roles: MutableCollection<out GrantedAuthority> = mutableListOf()
 ) : UserDetails {
     constructor(appUser: AppUser) : this(appUser.id!!, appUser.stagId, appUser.disabled,
-        roles = appUser.roles.map { SimpleGrantedAuthority(it.name) }.toMutableList())
+        roles = appUser.courseSemesterRoles.map { SimpleGrantedAuthority(it.name) }.toMutableList())
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return roles

@@ -1,8 +1,9 @@
-package cz.upce.fei.testingsubsystem.domain
+package cz.upce.fei.testingsubsystem.domain.testing
 
 import jakarta.persistence.*
 
 @Entity
+@Table
 data class Review (
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

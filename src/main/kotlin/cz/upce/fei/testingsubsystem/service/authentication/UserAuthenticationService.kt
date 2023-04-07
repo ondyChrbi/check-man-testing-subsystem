@@ -1,6 +1,6 @@
 package cz.upce.fei.testingsubsystem.service.authentication
 
-import cz.upce.fei.testingsubsystem.domain.AppUser
+import cz.upce.fei.testingsubsystem.domain.user.AppUser
 import cz.upce.fei.testingsubsystem.repository.AppUserRepository
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication

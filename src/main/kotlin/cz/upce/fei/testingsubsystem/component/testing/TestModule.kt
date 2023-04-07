@@ -1,8 +1,8 @@
 package cz.upce.fei.testingsubsystem.component.testing
 
-import cz.upce.fei.testingsubsystem.domain.Feedback
-import cz.upce.fei.testingsubsystem.domain.Solution
-import cz.upce.fei.testingsubsystem.domain.TestResult
+import cz.upce.fei.testingsubsystem.domain.testing.Feedback
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
+import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import cz.upce.fei.testingsubsystem.service.testing.IllegalResultPathException
 import java.nio.file.Files
 import java.nio.file.Path

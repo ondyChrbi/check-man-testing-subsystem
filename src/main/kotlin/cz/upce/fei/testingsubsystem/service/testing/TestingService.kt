@@ -1,12 +1,12 @@
 package cz.upce.fei.testingsubsystem.service.testing
 
-import cz.upce.fei.testingsubsystem.domain.Solution
-import cz.upce.fei.testingsubsystem.domain.TestConfiguration
-import cz.upce.fei.testingsubsystem.domain.TestResult
+import cz.upce.fei.testingsubsystem.domain.testing.Solution
+import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
+import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.repository.TestResultRepository
 import cz.upce.fei.testingsubsystem.component.testing.TestModule
-import cz.upce.fei.testingsubsystem.domain.Review
+import cz.upce.fei.testingsubsystem.domain.testing.Review
 import cz.upce.fei.testingsubsystem.service.solution.ReviewService
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream

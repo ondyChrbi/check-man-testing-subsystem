@@ -1,7 +1,7 @@
 package cz.upce.fei.testingsubsystem.component.testing
 
-import cz.upce.fei.testingsubsystem.domain.Feedback
-import cz.upce.fei.testingsubsystem.domain.Feedback.Companion.TEST_CASE_MAP
+import cz.upce.fei.testingsubsystem.domain.testing.Feedback
+import cz.upce.fei.testingsubsystem.domain.testing.Feedback.Companion.TEST_CASE_MAP
 import org.w3c.dom.Element
 
 data class JunitTestCase(

@@ -1,13 +1,14 @@
-package cz.upce.fei.testingsubsystem.domain
+package cz.upce.fei.testingsubsystem.domain.course
 
+import cz.upce.fei.testingsubsystem.domain.user.AppUser
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "global_role")
-data class Role(
+@Table
+data class CourseSemesterRole(
     @field:Id private var id: Long,
     @field:Column var name: String,
-    @field:ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @field:ManyToMany(mappedBy = "courseSemesterRoles", fetch = FetchType.LAZY)
     var appUsers: MutableCollection<AppUser> = mutableListOf()
 ) {
     override fun toString(): String {

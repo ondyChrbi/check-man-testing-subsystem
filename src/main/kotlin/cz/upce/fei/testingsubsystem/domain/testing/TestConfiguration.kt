@@ -1,10 +1,12 @@
-package cz.upce.fei.testingsubsystem.domain
+package cz.upce.fei.testingsubsystem.domain.testing
 
+import cz.upce.fei.testingsubsystem.domain.course.Challenge
 import cz.upce.fei.testingsubsystem.dto.TestConfigurationDto
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
+@Table
 data class TestConfiguration(
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
     @field:Column var templatePath: String? = null,
@@ -18,7 +20,12 @@ data class TestConfiguration(
 ) {
     fun toDto(): TestConfigurationDto {
         return TestConfigurationDto(
-            id = id!!, templatePath = templatePath, dockerFilePath = dockerFilePath, active = active, creationDate = creationDate, updateDate = updateDate
+            id = id!!,
+            templatePath = templatePath,
+            dockerFilePath = dockerFilePath,
+            active = active,
+            creationDate = creationDate,
+            updateDate = updateDate
         )
     }
 

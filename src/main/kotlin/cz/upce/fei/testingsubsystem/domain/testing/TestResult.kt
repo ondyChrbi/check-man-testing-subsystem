@@ -1,9 +1,10 @@
-package cz.upce.fei.testingsubsystem.domain
+package cz.upce.fei.testingsubsystem.domain.testing
 
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
+@Table
 data class TestResult(
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
     @field:Column var log: String = "",
