@@ -1,7 +1,6 @@
-package cz.upce.fei.testingsubsystem.component.testing
+package cz.upce.fei.testingsubsystem.component.testing.module.gradle
 
 import cz.upce.fei.testingsubsystem.domain.testing.Feedback
-import cz.upce.fei.testingsubsystem.domain.testing.Feedback.Companion.TEST_CASE_MAP
 import org.w3c.dom.Element
 
 data class JunitTestCase(
@@ -13,7 +12,7 @@ data class JunitTestCase(
     fun toFeedback() : Feedback {
         return Feedback(
             description = "$classname-$name",
-            feedbackTypeId = TEST_CASE_MAP[status]!!.id
+            feedbackTypeId = Feedback.TEST_CASE_MAP[status]!!.id
         )
     }
 

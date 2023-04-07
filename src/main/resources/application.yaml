@@ -25,3 +25,5 @@ check-man:
       container:
         timeout: 50
 
+my:
+  group: ${group}

@@ -1,7 +1,7 @@
 package cz.upce.fei.testingsubsystem.domain.testing
 
 import cz.upce.fei.testingsubsystem.domain.course.Challenge
-import cz.upce.fei.testingsubsystem.dto.TestConfigurationDto
+import cz.upce.fei.testingsubsystem.dto.TestConfigurationDtoV1
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -11,6 +11,7 @@ data class TestConfiguration(
     @field:Id @field:GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null,
     @field:Column var templatePath: String? = null,
     @field:Column var dockerFilePath: String? = null,
+    @field:Column var testModuleClass: String? = null,
     @field:Column var active: Boolean = true,
     @field:Column var creationDate: LocalDateTime = LocalDateTime.now(),
     @field:Column var updateDate: LocalDateTime? = null,
@@ -18,14 +19,15 @@ data class TestConfiguration(
     @field:JoinColumn(name = "challenge_id", nullable = false)
     var challenge: Challenge? = null
 ) {
-    fun toDto(): TestConfigurationDto {
-        return TestConfigurationDto(
+    fun toDto(): TestConfigurationDtoV1 {
+        return TestConfigurationDtoV1(
             id = id!!,
             templatePath = templatePath,
             dockerFilePath = dockerFilePath,
             active = active,
             creationDate = creationDate,
-            updateDate = updateDate
+            updateDate = updateDate,
+            testModuleClass = testModuleClass
         )
     }
 

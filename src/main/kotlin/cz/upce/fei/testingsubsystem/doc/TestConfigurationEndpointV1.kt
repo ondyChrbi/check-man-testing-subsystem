@@ -13,7 +13,7 @@ import java.lang.annotation.Inherited
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Inherited
-@Operation(summary = "Find all available test configurations.", security = [SecurityRequirement(name = "bearerAuth")])
+@Operation(summary = "Find tech configuration.", security = [SecurityRequirement(name = "bearerAuth")])
 @ApiResponses(
     ApiResponse(
         responseCode = "200",
@@ -44,4 +44,4 @@ import java.lang.annotation.Inherited
         content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
     )
 )
-annotation class AvailableTemplatesEndpointV1
+annotation class TestConfigurationEndpointV1

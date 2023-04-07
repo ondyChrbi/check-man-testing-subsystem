@@ -1,5 +1,6 @@
 package cz.upce.fei.testingsubsystem.component.testing
 
+import cz.upce.fei.testingsubsystem.component.testing.module.gradle.GradleModule
 import cz.upce.fei.testingsubsystem.domain.testing.Solution
 import cz.upce.fei.testingsubsystem.repository.SolutionRepository
 import cz.upce.fei.testingsubsystem.service.testing.TestingService

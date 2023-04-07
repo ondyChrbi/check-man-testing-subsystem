@@ -1,9 +1,7 @@
 package cz.upce.fei.testingsubsystem.doc
 
-import cz.upce.fei.testingsubsystem.dto.TestConfigurationDtoV1
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
@@ -13,15 +11,17 @@ import java.lang.annotation.Inherited
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Inherited
-@Operation(summary = "Find all available test configurations.", security = [SecurityRequirement(name = "bearerAuth")])
+@Operation(summary = "Create new test configuration.", security = [SecurityRequirement(name = "bearerAuth")])
 @ApiResponses(
     ApiResponse(
-        responseCode = "200",
-        description = "Record",
-        content = [Content(
-            mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = Schema(implementation = TestConfigurationDtoV1::class)
-        )]
+        responseCode = "201",
+        description = "Created.",
+        content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
+    ),
+    ApiResponse(
+        responseCode = "400",
+        description = "Bad request, check if your file extentions are supported (.zip) and it is valid Gradle project.",
+        content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
     ),
     ApiResponse(
         responseCode = "401",
@@ -34,14 +34,9 @@ import java.lang.annotation.Inherited
         content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
     ),
     ApiResponse(
-        responseCode = "404",
-        description = "Record not found.",
-        content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
-    ),
-    ApiResponse(
         responseCode = "500",
         description = "Error occur on server side. Please try it again later or contact technical support.",
         content = [Content(mediaType = MediaType.TEXT_PLAIN_VALUE)]
     )
 )
-annotation class AvailableTemplatesEndpointV1
+annotation class CreateTestConfigurationEndpointV1

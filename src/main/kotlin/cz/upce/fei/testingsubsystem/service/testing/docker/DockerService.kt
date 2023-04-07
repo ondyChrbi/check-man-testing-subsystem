@@ -7,7 +7,7 @@ import com.github.dockerjava.api.command.BuildImageResultCallback
 import com.github.dockerjava.api.command.CreateContainerResponse
 import com.github.dockerjava.api.command.WaitContainerResultCallback
 import com.github.dockerjava.api.model.*
-import cz.upce.fei.testingsubsystem.component.testing.GradleModule
+import cz.upce.fei.testingsubsystem.component.testing.module.gradle.GradleModule
 import cz.upce.fei.testingsubsystem.domain.testing.Solution
 import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestResultRepository
@@ -28,7 +28,7 @@ class DockerService(
     private val hostConfig: HostConfig,
 
 ) {
-    val logger: Logger = LoggerFactory.getLogger(this::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     fun createImage(buildImageCmd: BuildImageCmd, testResult: TestResult?, log: StringBuffer): String? {
         return buildImageCmd.exec(object : BuildImageResultCallback() {

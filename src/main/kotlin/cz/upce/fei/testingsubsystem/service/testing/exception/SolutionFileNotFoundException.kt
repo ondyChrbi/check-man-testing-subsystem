@@ -1,4 +1,4 @@
-package cz.upce.fei.testingsubsystem.service.testing
+package cz.upce.fei.testingsubsystem.service.testing.exception
 
 import cz.upce.fei.testingsubsystem.domain.testing.Solution
 

@@ -4,6 +4,8 @@ import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
 import cz.upce.fei.testingsubsystem.lib.GradleValidator
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.service.solution.ChallengeService
+import cz.upce.fei.testingsubsystem.service.testing.TestingModuleService
+import cz.upce.fei.testingsubsystem.service.testing.exception.ChallengeAlreadyHasConfigurationException
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -16,10 +18,11 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.util.*
 
-
 @Service
-class TemplateService(
+@Transactional
+class TestConfigurationService(
     private val challengeService: ChallengeService,
+    private val testingModuleService: TestingModuleService,
     private val testConfigurationRepository: TestConfigurationRepository
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -45,16 +48,28 @@ class TemplateService(
         logger.info("New directory for templates created at: $dockerFilesLocation")
     }
 
-    @Transactional
+    fun add(testConfiguration: TestConfiguration, challengeId: Long): TestConfiguration {
+        testingModuleService.validateTestingModule(testConfiguration.testModuleClass)
+
+        val challenge = challengeService.findById(challengeId)
+
+        if (testConfigurationRepository.existsByChallengeEquals(challenge)) {
+            throw ChallengeAlreadyHasConfigurationException(challenge)
+        }
+
+        testConfiguration.challenge = challenge
+        return testConfigurationRepository.save(testConfiguration)
+    }
+
     fun add(file: MultipartFile, challengeId: Long): TestConfiguration {
         val challenge = challengeService.findById(challengeId)
         val path = add(file)
 
         return testConfigurationRepository.save(
             TestConfiguration(
-            templatePath = path.toString(),
-            challenge = challenge
-        )
+                templatePath = path.toString(),
+                challenge = challenge
+            )
         )
     }
 
@@ -70,7 +85,14 @@ class TemplateService(
         return locationToSave
     }
 
-    @Transactional
+    fun addTemplate(file: MultipartFile, testConfigurationId: Long): TestConfiguration {
+        val configuration = testConfigurationRepository.findById(testConfigurationId)
+            .orElseThrow { RecordNotFoundException(TestConfiguration::class.java, testConfigurationId) }
+
+        configuration.templatePath = add(file, Type.TEMPLATE).toString()
+        return testConfigurationRepository.save(configuration)
+    }
+
     fun addDockerFile(id: Long, file: MultipartFile): TestConfiguration {
         val configurationOptional = testConfigurationRepository.findById(id)
 
@@ -86,11 +108,16 @@ class TemplateService(
         return configuration
     }
 
-    @Transactional
     fun findAll(challengeId: Long): Collection<TestConfiguration> {
         val challenge = challengeService.findById(challengeId)
 
         return testConfigurationRepository.findAllByChallengeEquals(challenge)
+    }
+
+    fun findByChallenge(challengeId: Long): TestConfiguration? {
+        val challenge = challengeService.findById(challengeId)
+
+        return testConfigurationRepository.findFirstByChallengeEquals(challenge)
     }
 
     private fun saveDockerFile(file: MultipartFile): Path {

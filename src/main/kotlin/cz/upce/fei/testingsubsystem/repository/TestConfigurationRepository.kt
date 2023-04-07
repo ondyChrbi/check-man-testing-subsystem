@@ -18,4 +18,8 @@ interface TestConfigurationRepository : JpaRepository<TestConfiguration, Long> {
     fun findBySolution(solution: Solution) : TestConfiguration
 
     fun findAllByChallengeEquals(challenge: Challenge) : List<TestConfiguration>
+
+    fun findFirstByChallengeEquals(challenge: Challenge) : TestConfiguration?
+
+    fun existsByChallengeEquals(challenge: Challenge) : Boolean
 }

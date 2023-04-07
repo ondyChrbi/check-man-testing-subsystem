@@ -5,9 +5,10 @@ import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
 import cz.upce.fei.testingsubsystem.domain.testing.TestResult
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.repository.TestResultRepository
-import cz.upce.fei.testingsubsystem.component.testing.TestModule
+import cz.upce.fei.testingsubsystem.component.testing.module.TestModule
 import cz.upce.fei.testingsubsystem.domain.testing.Review
 import cz.upce.fei.testingsubsystem.service.solution.ReviewService
+import cz.upce.fei.testingsubsystem.service.testing.exception.*
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
 import org.apache.commons.compress.utils.IOUtils

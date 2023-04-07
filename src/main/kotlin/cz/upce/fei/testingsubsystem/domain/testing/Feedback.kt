@@ -1,6 +1,6 @@
 package cz.upce.fei.testingsubsystem.domain.testing
 
-import cz.upce.fei.testingsubsystem.component.testing.JunitTestCase
+import cz.upce.fei.testingsubsystem.component.testing.module.gradle.JunitTestCase
 import jakarta.persistence.*
 import java.time.LocalDateTime
 

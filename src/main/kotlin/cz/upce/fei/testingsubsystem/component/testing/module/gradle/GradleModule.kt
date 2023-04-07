@@ -1,17 +1,17 @@
-package cz.upce.fei.testingsubsystem.component.testing
+package cz.upce.fei.testingsubsystem.component.testing.module.gradle
 
 import com.github.dockerjava.api.model.Bind
 import com.github.dockerjava.api.model.Volume
-import cz.upce.fei.testingsubsystem.component.testing.JunitTestCase.Companion.parseStatus
+import cz.upce.fei.testingsubsystem.component.testing.module.TestModule
+import cz.upce.fei.testingsubsystem.component.testing.module.gradle.JunitTestCase.Companion.parseStatus
 import cz.upce.fei.testingsubsystem.domain.testing.Feedback
 import cz.upce.fei.testingsubsystem.domain.testing.Solution
 import cz.upce.fei.testingsubsystem.domain.testing.TestResult
+import cz.upce.fei.testingsubsystem.service.testing.annotation.TestingModule
 import cz.upce.fei.testingsubsystem.service.testing.docker.DockerService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Scope
-import org.springframework.stereotype.Component
 import org.w3c.dom.Element
 import java.io.File
 import java.nio.file.Files
@@ -20,10 +20,14 @@ import java.util.*
 import javax.xml.parsers.DocumentBuilderFactory
 import kotlin.streams.asSequence
 
-@Component
-@Scope("prototype")
+@TestingModule(
+    key = "gradle-java-kotlin",
+    dockerFilePath = "docker/gradle/Dockerfile",
+    name = "Gradle Java/Kotlin",
+    description = "Gradle Java/Kotlin testing module"
+)
 class GradleModule(private val dockerService: DockerService) : TestModule {
-    val logger: Logger = LoggerFactory.getLogger(this::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @Value("\${check-man.modules.gradle.volume.container-path}")
     private var volumeContainerPath : String = ""
