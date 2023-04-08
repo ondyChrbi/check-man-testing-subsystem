@@ -1,6 +1,7 @@
 package cz.upce.fei.testingsubsystem.service
 
 import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
+import cz.upce.fei.testingsubsystem.dto.TestConfigurationDtoV1
 import cz.upce.fei.testingsubsystem.lib.GradleValidator
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
 import cz.upce.fei.testingsubsystem.service.solution.ChallengeService
@@ -143,6 +144,18 @@ class TestConfigurationService(
         val newFileName = Paths.get("${UUID.randomUUID()}${extension}")
 
         return baseFolder.resolve(newFileName)
+    }
+
+    fun patch(testConfigurationId: Long, testConfigurationDto: TestConfigurationDtoV1): TestConfiguration {
+        val configurationOptional = testConfigurationRepository.findById(testConfigurationId)
+
+        if (configurationOptional.isEmpty) {
+            throw ResourceNotFoundException(TestConfiguration::class.java, testConfigurationId)
+        }
+
+        return testConfigurationRepository.save(
+            configurationOptional.get().patch(testConfigurationDto)
+        )
     }
 
     enum class Type {

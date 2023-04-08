@@ -12,7 +12,7 @@ data class TestConfiguration(
     @field:Column var templatePath: String? = null,
     @field:Column var dockerFilePath: String? = null,
     @field:Column var testModuleClass: String? = null,
-    @field:Column var active: Boolean = true,
+    @field:Column var active: Boolean = false,
     @field:Column var creationDate: LocalDateTime = LocalDateTime.now(),
     @field:Column var updateDate: LocalDateTime? = null,
     @field:OneToOne
@@ -29,6 +29,16 @@ data class TestConfiguration(
             updateDate = updateDate,
             testModuleClass = testModuleClass
         )
+    }
+
+    fun patch(testConfigurationDto: TestConfigurationDtoV1): TestConfiguration {
+        testConfigurationDto.templatePath?.let { templatePath = it }
+        testConfigurationDto.dockerFilePath?.let { dockerFilePath = it }
+        testConfigurationDto.testModuleClass?.let { testModuleClass = it }
+        active = testConfigurationDto.active
+        testConfigurationDto.updateDate?.let { updateDate = it }
+
+        return this
     }
 
     override fun toString(): String {

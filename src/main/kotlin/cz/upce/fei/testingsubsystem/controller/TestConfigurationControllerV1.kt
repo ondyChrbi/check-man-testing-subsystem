@@ -1,6 +1,7 @@
 package cz.upce.fei.testingsubsystem.controller
 
 import cz.upce.fei.testingsubsystem.doc.*
+import cz.upce.fei.testingsubsystem.dto.TestConfigurationDtoV1
 import cz.upce.fei.testingsubsystem.dto.TestConfigurationInputDtoV1
 import cz.upce.fei.testingsubsystem.service.TestConfigurationService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -44,6 +45,16 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @CrossOrigin
     fun addTemplate(@PathVariable testConfigurationId: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
         val result = testConfigurationService.addTemplate(file, testConfigurationId)
+
+        return ResponseEntity.ok(result.toDto())
+    }
+
+
+    @PatchMapping("/test-configuration/{testConfigurationId}")
+    @PatchTestConfigurationEndpointV1
+    @CrossOrigin
+    fun patch(@PathVariable testConfigurationId: Long, @RequestBody testConfigurationDto: TestConfigurationDtoV1): ResponseEntity<*> {
+        val result = testConfigurationService.patch(testConfigurationId, testConfigurationDto)
 
         return ResponseEntity.ok(result.toDto())
     }
