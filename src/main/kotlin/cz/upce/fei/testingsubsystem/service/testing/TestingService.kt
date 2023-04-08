@@ -8,12 +8,15 @@ import cz.upce.fei.testingsubsystem.repository.TestResultRepository
 import cz.upce.fei.testingsubsystem.component.testing.module.TestModule
 import cz.upce.fei.testingsubsystem.domain.testing.Review
 import cz.upce.fei.testingsubsystem.service.solution.ReviewService
+import cz.upce.fei.testingsubsystem.service.testing.annotation.TestingModule
 import cz.upce.fei.testingsubsystem.service.testing.exception.*
 import jakarta.annotation.PostConstruct
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream
 import org.apache.commons.compress.utils.IOUtils
 import org.slf4j.LoggerFactory
+import org.springframework.beans.BeansException
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
@@ -28,7 +31,8 @@ import java.util.*
 class TestingService(
     private val reviewService: ReviewService,
     private val testConfigurationRepository: TestConfigurationRepository,
-    private val testResultRepository: TestResultRepository
+    private val testResultRepository: TestResultRepository,
+    private val applicationContext: ApplicationContext,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -42,14 +46,17 @@ class TestingService(
     }
 
     @Transactional(noRollbackFor = [Throwable::class])
-    fun test(solution: Solution, testModule: TestModule, testResult: TestResult = initNewTestResult(solution)) {
+    fun test(solution: Solution, testResult: TestResult = initNewTestResult(solution)) {
         val configuration = testConfigurationRepository.findBySolution(solution)
-        val playgroundLocation = preparePlayground(solution, configuration)
+        
+        val testModule = initTestModuleBean(configuration)
+        val dockerFileLocation = initDockerFile(testModule)
 
+        val playgroundLocation = preparePlayground(solution, configuration)
         val resultLocation = playgroundLocation.resolve(Paths.get(RESULT_DIR_NAME))
 
         updateStatus(testResult, Solution.TestStatus.RUNNING)
-        testModule.test(playgroundLocation.resolve(Paths.get(DOCKER_FILE_NAME)), testResult, resultLocation)
+        testModule.test(playgroundLocation.resolve(dockerFileLocation), testResult, resultLocation)
         logger.info("Testing finished for $solution")
 
         val review = saveFeedbacks(resultLocation, solution, testModule)
@@ -162,6 +169,32 @@ class TestingService(
         logger.debug("Zip $zipLocation unarchived to location $unzipLocation")
 
         return location
+    }
+
+    private fun initTestModuleBean(configuration: TestConfiguration): TestModule {
+        val testModule = configuration.testModuleClass ?:
+        throw TestModuleNotSetException(configuration)
+
+        try {
+            return applicationContext.getBean(Class.forName(testModule)) as TestModule
+        } catch (e: BeansException) {
+            throw TestModuleNotFoundException(testModule)
+        }
+    }
+
+    private fun initDockerFile(testModule: TestModule): Path {
+        val dockerFileModule = testModule::class.java.getAnnotation(TestingModule::class.java)
+            ?: throw DockerFileNotSetException(testModule::class.java)
+
+        val resourceUrl = Thread.currentThread().contextClassLoader.getResource(dockerFileModule.dockerFilePath)
+            ?: throw DockerFileNotExistException(dockerFileModule.dockerFilePath)
+
+        val dockerFileLocation = Paths.get(resourceUrl.toURI())
+        if (Files.notExists(dockerFileLocation)) {
+            throw DockerFileNotExistException(dockerFileLocation)
+        }
+
+        return dockerFileLocation
     }
 
     private companion object {

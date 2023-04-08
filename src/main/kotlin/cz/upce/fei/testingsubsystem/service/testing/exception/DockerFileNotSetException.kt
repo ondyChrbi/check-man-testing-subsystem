@@ -6,5 +6,8 @@ class DockerFileNotSetException(message: String) : Exception(message) {
     constructor(configuration: TestConfiguration) : this("""
         Docker file not set for configuration $configuration
     """.trimIndent())
-    constructor(c: Class<*>) : this(c.name)
+
+    constructor(c: Class<*>) : this("""
+        Docker file not set for module ${c.simpleName}
+    """.trimIndent())
 }

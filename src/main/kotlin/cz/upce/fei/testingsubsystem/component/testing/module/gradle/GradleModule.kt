@@ -22,7 +22,7 @@ import kotlin.streams.asSequence
 
 @TestingModule(
     key = "gradle-java-kotlin",
-    dockerFilePath = "docker/gradle/Dockerfile",
+    dockerFilePath = "dockerfile/DockerFile-Gradle-Module",
     name = "Gradle Java/Kotlin",
     description = "Gradle Java/Kotlin testing module"
 )
