@@ -18,19 +18,22 @@ class TestJob(
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     fun runTesting() {
         logger.info("Checking new solutions to test")
-        val solutionToTest = solutionRepository.findFirsToToTest(Solution.TestStatus.WAITING_TO_TEST.id)
+        val solutionToTest = solutionRepository.findFirsToToTest()
 
         if (solutionToTest != null) {
             logger.debug("Prepare to test $solutionToTest solution...")
 
             val testResult = testingService.initNewTestResult(solutionToTest)
+            val log = StringBuffer("")
 
             try {
-                testingService.test(solutionToTest, testResult)
+                testingService.test(solutionToTest, testResult, log)
                 testingService.updateStatus(testResult, Solution.TestStatus.FINISHED)
             } catch (e: Exception) {
                 logger.error(e.message)
                 testingService.updateStatus(testResult, Solution.TestStatus.ERROR)
+            } finally {
+                testingService.updateLog(testResult, log.toString())
             }
         }
     }

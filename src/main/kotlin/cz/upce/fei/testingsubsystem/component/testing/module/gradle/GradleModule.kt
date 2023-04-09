@@ -35,12 +35,10 @@ class GradleModule(private val dockerService: DockerService) : TestModule {
     @Value("\${check-man.modules.gradle.container.timeout}")
     private var containerTimeout: Int = 30
 
-    override fun test(dockerFile: Path, testResult: TestResult?, resultPath: Path): Path {
-        super.test(dockerFile, testResult, resultPath)
+    override fun test(dockerFile: Path, resultPath: Path, testResult: TestResult?, log: StringBuffer): Path {
+        super.test(dockerFile, resultPath, testResult, log)
 
         val imageName = "$GRADLE_CONTAINER_PREFIX-${UUID.randomUUID()}"
-
-        val log = StringBuffer("")
         val imageId = dockerService.buildImage(dockerFile, imageName, testResult)
 
         val binds = listOf(Bind(resultPath.toAbsolutePath().toString(), Volume(volumeContainerPath)))

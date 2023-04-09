@@ -7,6 +7,8 @@ import cz.upce.fei.testingsubsystem.repository.ChallengeRepository
 import cz.upce.fei.testingsubsystem.repository.SolutionRepository
 import cz.upce.fei.testingsubsystem.service.RecordNotFoundException
 import cz.upce.fei.testingsubsystem.service.TestConfigurationService
+import cz.upce.fei.testingsubsystem.service.solution.exception.NoTestConfigurationSetException
+import cz.upce.fei.testingsubsystem.service.testing.TestResultService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
@@ -16,16 +18,20 @@ import java.nio.file.Path
 class SolutionService(
     private val solutionRepository: SolutionRepository,
     private val challengeRepository: ChallengeRepository,
-    private val testConfigurationService: TestConfigurationService
+    private val testConfigurationService: TestConfigurationService,
+    private val testResultService: TestResultService,
 ) {
-    @Throws(RecordNotFoundException::class)
+    @Throws(RecordNotFoundException::class, NoTestConfigurationSetException::class)
     @Transactional
     fun add(challengeId: Long, appUser: AppUser, file: MultipartFile): Solution {
         val challenge = challengeRepository.findByIdEquals(challengeId)
             ?: throw RecordNotFoundException(Challenge::class.java, challengeId)
-        val path = save(file)
 
-        return solutionRepository.save(Solution(path = path.toString(), user = appUser, challenge = challenge))
+        if (challenge.testConfiguration != null) {
+            testResultService.checkExistWaiting(challenge, appUser)
+        }
+
+        return solutionRepository.save(Solution(path = save(file).toString(), user = appUser, challenge = challenge))
     }
 
     private fun save(file: MultipartFile): Path {

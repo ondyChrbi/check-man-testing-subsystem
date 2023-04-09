@@ -14,6 +14,8 @@ interface TestConfigurationRepository : JpaRepository<TestConfiguration, Long> {
         INNER JOIN Challenge c
         INNER JOIN Solution s
         where s = :solution
+        order by tc.creationDate desc
+        limit 1
     """)
     fun findBySolution(solution: Solution) : TestConfiguration
 

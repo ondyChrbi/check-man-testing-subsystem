@@ -46,7 +46,7 @@ class TestingService(
     }
 
     @Transactional(noRollbackFor = [Throwable::class])
-    fun test(solution: Solution, testResult: TestResult = initNewTestResult(solution)) {
+    fun test(solution: Solution, testResult: TestResult = initNewTestResult(solution), log : StringBuffer = StringBuffer("")) {
         val configuration = testConfigurationRepository.findBySolution(solution)
         
         val testModule = initTestModuleBean(configuration)
@@ -56,7 +56,7 @@ class TestingService(
         val resultLocation = playgroundLocation.resolve(Paths.get(RESULT_DIR_NAME))
 
         updateStatus(testResult, Solution.TestStatus.RUNNING)
-        testModule.test(playgroundLocation.resolve(dockerFileLocation), testResult, resultLocation)
+        testModule.test(playgroundLocation.resolve(dockerFileLocation), resultLocation, testResult, log)
         logger.info("Testing finished for $solution")
 
         val review = saveFeedbacks(resultLocation, solution, testModule)
@@ -71,6 +71,12 @@ class TestingService(
     @Transactional(noRollbackFor = [Exception::class])
     fun updateStatus(testResult: TestResult, status: Solution.TestStatus = Solution.TestStatus.WAITING_TO_TEST): TestResult {
         testResult.testStatusId = status.id
+        return testResultRepository.save(testResult)
+    }
+
+    @Transactional(noRollbackFor = [Exception::class])
+    fun updateLog(testResult: TestResult, log: String): TestResult {
+        testResult.log = log
         return testResultRepository.save(testResult)
     }
 

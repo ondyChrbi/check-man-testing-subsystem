@@ -26,7 +26,9 @@ class SolutionControllerV1(
     @SolutionEndpointV1
     @CrossOrigin
     fun add(@PathVariable challengeId: Long, @RequestParam("file") file: MultipartFile, authentication: Authentication): ResponseEntity<*> {
-        val result = solutionService.add(challengeId, authenticationService.extractAuthenticateUser(authentication), file)
+        val appUser = authenticationService.extractAuthenticateUser(authentication)
+        val result = solutionService.add(challengeId, appUser, file)
+
         return ResponseEntity.ok(result.toDto())
     }
 }

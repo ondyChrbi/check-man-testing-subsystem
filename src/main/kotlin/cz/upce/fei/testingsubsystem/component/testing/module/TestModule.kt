@@ -10,7 +10,12 @@ import java.nio.file.Paths
 import kotlin.io.path.isDirectory
 
 interface TestModule {
-    fun test(dockerFile: Path, testResult: TestResult? = null, resultPath : Path = Paths.get(DEFAULT_PLAYGROUND_PATH)): Path {
+    fun test(
+        dockerFile: Path,
+        resultPath: Path = Paths.get(DEFAULT_PLAYGROUND_PATH),
+        testResult: TestResult? = null,
+        log: StringBuffer = StringBuffer("")
+    ): Path {
         validateResultPath(resultPath)
         return resultPath
     }
@@ -25,7 +30,8 @@ interface TestModule {
                 Files.createDirectories(resultPath)
             }
 
-            if (!resultPath.isDirectory()) { throw IllegalResultPathException(resultPath)
+            if (!resultPath.isDirectory()) {
+                throw IllegalResultPathException(resultPath)
             }
 
             Files.newDirectoryStream(resultPath).use { directoryStream ->
