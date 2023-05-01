@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CourseSemesterRoleService(
-    private val courseSemesterService: CourseSemesterService,
+    private val semesterService: SemesterService,
     private val courseSemesterRoleRepository: CourseSemesterRoleRepository
 ) {
     @Transactional
     fun hasAppUserRoles(semesterId: Long, appUser: AppUser, requestedRoles: List<String>): Boolean {
-        val course = courseSemesterService.findById(semesterId)
+        val course = semesterService.findById(semesterId)
         if (course.isEmpty) { return false }
 
         val roles = courseSemesterRoleRepository.findAllByCourseSemesterAndAppUser(course.get(), appUser)

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class ChallengeService(private val challengeRepository: ChallengeRepository) {
+class AuthenticationService(private val challengeRepository: ChallengeRepository) {
     @Transactional
     fun findById(id: Long): Challenge {
         return challengeRepository.findByIdEquals(id) ?:

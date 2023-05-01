@@ -2,7 +2,7 @@ package cz.upce.fei.testingsubsystem.controller
 
 import cz.upce.fei.testingsubsystem.doc.SolutionEndpointV1
 import cz.upce.fei.testingsubsystem.service.solution.SolutionService
-import cz.upce.fei.testingsubsystem.service.authentication.UserAuthenticationService
+import cz.upce.fei.testingsubsystem.service.authentication.AppUserAuthenticationService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -20,7 +20,7 @@ import java.util.*
 @Tag(name = "Solution endpoint", description = "Solution upload (V1)")
 class SolutionControllerV1(
     private val solutionService: SolutionService,
-    private val authenticationService: UserAuthenticationService
+    private val authenticationService: AppUserAuthenticationService
 ) {
     @PostMapping("")
     @SolutionEndpointV1

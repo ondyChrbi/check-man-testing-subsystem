@@ -50,7 +50,7 @@ class GradleModule(private val dockerService: DockerService) : TestModule {
         return resultPath
     }
 
-    override fun resultToFeedbacks(resultPath: Path, solution: Solution): Collection<Feedback> {
+    override fun resultToFeedbacks(resultPath: Path): Collection<Feedback> {
         return findXmlFiles(resultPath)
             .map { parseTestResults(it) }
             .map { it.testCases }

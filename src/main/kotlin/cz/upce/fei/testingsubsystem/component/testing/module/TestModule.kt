@@ -20,7 +20,7 @@ interface TestModule {
         return resultPath
     }
 
-    fun resultToFeedbacks(resultPath: Path, solution: Solution): Collection<Feedback>
+    fun resultToFeedbacks(resultPath: Path): Collection<Feedback>
 
     private companion object {
         const val DEFAULT_PLAYGROUND_PATH = ""

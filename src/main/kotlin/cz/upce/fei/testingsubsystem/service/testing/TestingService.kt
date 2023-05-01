@@ -83,7 +83,7 @@ class TestingService(
     @Transactional
     protected fun saveFeedbacks(resultLocation: Path, solution: Solution, testModule: TestModule): Review {
         val review = reviewService.createReviewIfNotExist(solution)
-        val feedbacks = testModule.resultToFeedbacks(resultLocation, solution)
+        val feedbacks = testModule.resultToFeedbacks(resultLocation)
 
         return reviewService.assignFeedbacks(review, feedbacks)
     }

@@ -4,7 +4,7 @@ import cz.upce.fei.testingsubsystem.domain.testing.TestConfiguration
 import cz.upce.fei.testingsubsystem.dto.TestConfigurationDtoV1
 import cz.upce.fei.testingsubsystem.lib.GradleValidator
 import cz.upce.fei.testingsubsystem.repository.TestConfigurationRepository
-import cz.upce.fei.testingsubsystem.service.solution.ChallengeService
+import cz.upce.fei.testingsubsystem.service.solution.AuthenticationService
 import cz.upce.fei.testingsubsystem.service.testing.TestingModuleService
 import cz.upce.fei.testingsubsystem.service.testing.exception.ChallengeAlreadyHasConfigurationException
 import jakarta.annotation.PostConstruct
@@ -22,7 +22,7 @@ import java.util.*
 @Service
 @Transactional
 class TestConfigurationService(
-    private val challengeService: ChallengeService,
+    private val authenticationService: AuthenticationService,
     private val testingModuleService: TestingModuleService,
     private val testConfigurationRepository: TestConfigurationRepository
 ) {
@@ -52,7 +52,7 @@ class TestConfigurationService(
     fun add(testConfiguration: TestConfiguration, challengeId: Long): TestConfiguration {
         testingModuleService.validateTestingModule(testConfiguration.testModuleClass)
 
-        val challenge = challengeService.findById(challengeId)
+        val challenge = authenticationService.findById(challengeId)
 
         if (testConfigurationRepository.existsByChallengeEquals(challenge)) {
             throw ChallengeAlreadyHasConfigurationException(challenge)
@@ -63,7 +63,7 @@ class TestConfigurationService(
     }
 
     fun add(file: MultipartFile, challengeId: Long): TestConfiguration {
-        val challenge = challengeService.findById(challengeId)
+        val challenge = authenticationService.findById(challengeId)
         val path = add(file)
 
         return testConfigurationRepository.save(
@@ -110,13 +110,13 @@ class TestConfigurationService(
     }
 
     fun findAll(challengeId: Long): Collection<TestConfiguration> {
-        val challenge = challengeService.findById(challengeId)
+        val challenge = authenticationService.findById(challengeId)
 
         return testConfigurationRepository.findAllByChallengeEquals(challenge)
     }
 
     fun findByChallenge(challengeId: Long): TestConfiguration? {
-        val challenge = challengeService.findById(challengeId)
+        val challenge = authenticationService.findById(challengeId)
 
         return testConfigurationRepository.findFirstByChallengeEquals(challenge)
     }
