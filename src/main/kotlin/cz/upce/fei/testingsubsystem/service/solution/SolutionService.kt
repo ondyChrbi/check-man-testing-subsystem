@@ -13,7 +13,9 @@ import cz.upce.fei.testingsubsystem.service.testing.TestResultService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.LocalDateTime
 
 @Service
@@ -35,6 +37,22 @@ class SolutionService(
         }
 
         return solutionRepository.save(Solution(path = save(file).toString(), user = appUser, challenge = challenge))
+    }
+
+    fun downloadById(id: Long): Path {
+        val solution = solutionRepository.findById(id)
+
+        if (solution.isEmpty) {
+            throw RecordNotFoundException(Solution::class.java, id)
+        }
+
+        val path = Paths.get(solution.get().path)
+
+        if (Files.notExists(path)) {
+            throw RecordNotFoundException(Solution::class.java, id)
+        }
+
+        return path
     }
 
     private fun checkChallenge(challenge: Challenge) {
