@@ -1,8 +1,11 @@
 package cz.upce.fei.testingsubsystem.controller
 
+import cz.upce.fei.checkman.domain.course.security.annotation.ChallengeId
+import cz.upce.fei.checkman.domain.course.security.annotation.SolutionId
 import cz.upce.fei.testingsubsystem.doc.DownloadSolutionEndpointV1
 import cz.upce.fei.testingsubsystem.doc.SolutionEndpointV1
 import cz.upce.fei.testingsubsystem.service.authentication.AppUserAuthenticationService
+import cz.upce.fei.testingsubsystem.service.authentication.annotation.PreCourseAuthorize
 import cz.upce.fei.testingsubsystem.service.solution.SolutionService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.core.io.FileSystemResource
@@ -25,7 +28,8 @@ class SolutionControllerV1(
     @PostMapping("/challenge/{challengeId}/solution")
     @SolutionEndpointV1
     @CrossOrigin
-    fun add(@PathVariable challengeId: Long, @RequestParam("file") file: MultipartFile, authentication: Authentication): ResponseEntity<*> {
+    @PreCourseAuthorize
+    fun add(@ChallengeId @PathVariable challengeId: Long, @RequestParam("file") file: MultipartFile, authentication: Authentication): ResponseEntity<*> {
         val appUser = authenticationService.extractAuthenticateUser(authentication)
         val result = solutionService.add(challengeId, appUser, file)
 
@@ -35,7 +39,8 @@ class SolutionControllerV1(
     @GetMapping("/solution/{id}")
     @DownloadSolutionEndpointV1
     @CrossOrigin
-    fun findById(@PathVariable id: Long): ResponseEntity<Resource> {
+    @PreCourseAuthorize
+    fun findById(@SolutionId @PathVariable id: Long, authentication: Authentication): ResponseEntity<Resource> {
         val result = solutionService.downloadById(id)
 
         val headers = HttpHeaders()

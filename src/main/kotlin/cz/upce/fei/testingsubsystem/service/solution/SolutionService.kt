@@ -6,6 +6,7 @@ import cz.upce.fei.testingsubsystem.domain.testing.Solution
 import cz.upce.fei.testingsubsystem.repository.ChallengeRepository
 import cz.upce.fei.testingsubsystem.repository.SolutionRepository
 import cz.upce.fei.testingsubsystem.service.RecordNotFoundException
+import cz.upce.fei.testingsubsystem.service.ResourceNotFoundException
 import cz.upce.fei.testingsubsystem.service.TestConfigurationService
 import cz.upce.fei.testingsubsystem.service.solution.exception.CannotUploadSolutionToChallengeException
 import cz.upce.fei.testingsubsystem.service.solution.exception.NoTestConfigurationSetException
@@ -25,6 +26,17 @@ class SolutionService(
     private val testConfigurationService: TestConfigurationService,
     private val testResultService: TestResultService,
 ) {
+    @Transactional
+    fun findById(id: Long): Solution {
+        val solution = solutionRepository.findById(id)
+
+        if (solution.isEmpty) {
+            throw ResourceNotFoundException(Solution::class.java, id)
+        }
+
+        return solution.get()
+    }
+
     @Throws(RecordNotFoundException::class, NoTestConfigurationSetException::class)
     @Transactional
     fun add(challengeId: Long, appUser: AppUser, file: MultipartFile): Solution {

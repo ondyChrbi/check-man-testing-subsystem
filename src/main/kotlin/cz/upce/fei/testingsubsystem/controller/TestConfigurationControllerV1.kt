@@ -1,9 +1,11 @@
 package cz.upce.fei.testingsubsystem.controller
 
+import cz.upce.fei.checkman.domain.course.security.annotation.ChallengeId
 import cz.upce.fei.testingsubsystem.doc.*
 import cz.upce.fei.testingsubsystem.dto.TestConfigurationDtoV1
 import cz.upce.fei.testingsubsystem.dto.TestConfigurationInputDtoV1
 import cz.upce.fei.testingsubsystem.service.TestConfigurationService
+import cz.upce.fei.testingsubsystem.service.authentication.annotation.PreCourseAuthorize
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,7 +18,8 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @GetMapping("/challenge/{challengeId}/template")
     @AvailableTemplatesEndpointV1
     @CrossOrigin
-    fun findAll(@PathVariable challengeId: Long): ResponseEntity<*> {
+    @PreCourseAuthorize
+    fun findAll(@ChallengeId @PathVariable challengeId: Long): ResponseEntity<*> {
         val result = testConfigurationService.findAll(challengeId)
 
         return ResponseEntity.ok(result.map { it.toDto() })
@@ -25,7 +28,8 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @GetMapping("/challenge/{challengeId}/test-configuration")
     @TestConfigurationEndpointV1
     @CrossOrigin
-    fun find(@PathVariable challengeId: Long): ResponseEntity<*> {
+    @PreCourseAuthorize
+    fun find(@ChallengeId @PathVariable challengeId: Long): ResponseEntity<*> {
         val result = testConfigurationService.findByChallenge(challengeId)
 
         return ResponseEntity.ok(result?.toDto())
@@ -34,7 +38,8 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @PostMapping("/challenge/{challengeId}/test-configuration")
     @CreateTestConfigurationEndpointV1
     @CrossOrigin
-    fun addTestConfiguration(@PathVariable challengeId: Long, @RequestBody testConfigurationDto: TestConfigurationInputDtoV1): ResponseEntity<*> {
+    @PreCourseAuthorize
+    fun addTestConfiguration(@ChallengeId @PathVariable challengeId: Long, @RequestBody testConfigurationDto: TestConfigurationInputDtoV1): ResponseEntity<*> {
         val result = testConfigurationService.add(testConfigurationDto.toEntity(), challengeId)
 
         return ResponseEntity.ok(result.toDto())
