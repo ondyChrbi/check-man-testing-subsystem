@@ -8,6 +8,7 @@ import cz.upce.fei.testingsubsystem.service.TestConfigurationService
 import cz.upce.fei.testingsubsystem.service.authentication.annotation.PreCourseAuthorize
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
@@ -19,7 +20,7 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @AvailableTemplatesEndpointV1
     @CrossOrigin
     @PreCourseAuthorize
-    fun findAll(@ChallengeId @PathVariable challengeId: Long): ResponseEntity<*> {
+    fun findAll(@ChallengeId @PathVariable challengeId: Long, authentication: Authentication): ResponseEntity<*> {
         val result = testConfigurationService.findAll(challengeId)
 
         return ResponseEntity.ok(result.map { it.toDto() })
@@ -29,7 +30,7 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @TestConfigurationEndpointV1
     @CrossOrigin
     @PreCourseAuthorize
-    fun find(@ChallengeId @PathVariable challengeId: Long): ResponseEntity<*> {
+    fun find(@ChallengeId @PathVariable challengeId: Long, authentication: Authentication): ResponseEntity<*> {
         val result = testConfigurationService.findByChallenge(challengeId)
 
         return ResponseEntity.ok(result?.toDto())
@@ -39,7 +40,7 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @CreateTestConfigurationEndpointV1
     @CrossOrigin
     @PreCourseAuthorize
-    fun addTestConfiguration(@ChallengeId @PathVariable challengeId: Long, @RequestBody testConfigurationDto: TestConfigurationInputDtoV1): ResponseEntity<*> {
+    fun addTestConfiguration(@ChallengeId @PathVariable challengeId: Long, @RequestBody testConfigurationDto: TestConfigurationInputDtoV1, authentication: Authentication): ResponseEntity<*> {
         val result = testConfigurationService.add(testConfigurationDto.toEntity(), challengeId)
 
         return ResponseEntity.ok(result.toDto())
@@ -48,7 +49,7 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @PatchMapping("/test-configuration/{testConfigurationId}/template-path")
     @TemplateEndpointV1
     @CrossOrigin
-    fun addTemplate(@PathVariable testConfigurationId: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
+    fun addTemplate(@PathVariable testConfigurationId: Long, @RequestParam("file") file: MultipartFile, authentication: Authentication): ResponseEntity<*> {
         val result = testConfigurationService.addTemplate(file, testConfigurationId)
 
         return ResponseEntity.ok(result.toDto())
@@ -58,7 +59,7 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @PatchMapping("/test-configuration/{testConfigurationId}")
     @PatchTestConfigurationEndpointV1
     @CrossOrigin
-    fun patch(@PathVariable testConfigurationId: Long, @RequestBody testConfigurationDto: TestConfigurationDtoV1): ResponseEntity<*> {
+    fun patch(@PathVariable testConfigurationId: Long, @RequestBody testConfigurationDto: TestConfigurationDtoV1, authentication: Authentication): ResponseEntity<*> {
         val result = testConfigurationService.patch(testConfigurationId, testConfigurationDto)
 
         return ResponseEntity.ok(result.toDto())
@@ -67,7 +68,7 @@ class TestConfigurationControllerV1(private val testConfigurationService: TestCo
     @PatchMapping("/test-configuration/{testConfigurationId}/docker-file")
     @TemplateEndpointV1
     @CrossOrigin
-    fun addDocker(@PathVariable testConfigurationId: Long, @RequestParam("file") file: MultipartFile): ResponseEntity<*> {
+    fun addDocker(@PathVariable testConfigurationId: Long, @RequestParam("file") file: MultipartFile, authentication: Authentication): ResponseEntity<*> {
         val result = testConfigurationService.addDockerFile(testConfigurationId, file)
 
         return ResponseEntity.ok(result.toDto())
