@@ -67,6 +67,10 @@ class SolutionService(
         return path
     }
 
+    fun checkAuthor(solution: Solution, appUser: AppUser): Boolean {
+        return (solution.user != appUser)
+    }
+
     private fun checkChallenge(challenge: Challenge) {
         if (!challenge.active) {
             throw CannotUploadSolutionToChallengeException(challenge)

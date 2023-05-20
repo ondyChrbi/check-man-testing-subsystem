@@ -70,6 +70,6 @@ class AccessProfilingAspect(
     }
 
     private fun checkBasedSolution(solutionId: Long, appUser: AppUser): Boolean {
-        return courseSemesterRoleService.hasAppUserRolesSolution(solutionId, appUser, listOf("EDIT_CHALLENGE"))
+        return courseSemesterRoleService.hasAppUserRolesSolution(solutionId, appUser, listOf("REVIEW_CHALLENGE"))
     }
 }

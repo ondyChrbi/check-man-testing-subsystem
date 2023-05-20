@@ -38,6 +38,9 @@ class CourseSemesterRoleService(
 
         val roles = courseSemesterRoleRepository.findAllBySolutionAndAppUser(solution, appUser)
 
-        return roles.map { it.name }.containsAll(requestedRoles)
+        val hasRole = roles.map { it.name }.containsAll(requestedRoles)
+        val isAuthor = solution.user == appUser
+
+        return hasRole || isAuthor
     }
 }

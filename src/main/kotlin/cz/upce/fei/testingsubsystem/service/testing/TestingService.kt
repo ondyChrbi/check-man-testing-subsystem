@@ -52,11 +52,11 @@ class TestingService(
         val testModule = initTestModuleBean(configuration)
         val dockerFileLocation = initDockerFile(testModule)
 
-        val playgroundLocation = preparePlayground(solution, configuration)
+        val playgroundLocation = preparePlayground(solution, configuration, dockerFileLocation)
         val resultLocation = playgroundLocation.resolve(Paths.get(RESULT_DIR_NAME))
 
         updateStatus(testResult, Solution.TestStatus.RUNNING)
-        testModule.test(playgroundLocation.resolve(dockerFileLocation), resultLocation, testResult, log)
+        testModule.test(playgroundLocation.resolve(DOCKER_FILE_NAME), resultLocation, testResult, log)
         logger.info("Testing finished for $solution")
 
         val review = saveFeedbacks(resultLocation, solution, testModule)
@@ -88,26 +88,23 @@ class TestingService(
         return reviewService.assignFeedbacks(review, feedbacks)
     }
 
-    private fun preparePlayground(solution: Solution, configuration: TestConfiguration): Path {
+    private fun preparePlayground(solution: Solution, configuration: TestConfiguration, dockerFilePath: Path): Path {
         val testingPlaygroundDir = Paths.get(playgroundFilesLocation).resolve("${UUID.randomUUID()}")
         val location = Files.createDirectories(testingPlaygroundDir)
         logger.debug("Crated new empty playground for solution ${solution.id}: $location")
 
         copySolutionToPlayground(solution, testingPlaygroundDir)
-        copyTemplateToPlayground(configuration, testingPlaygroundDir)
+        copyTemplateToPlayground(configuration, testingPlaygroundDir, dockerFilePath)
 
         return testingPlaygroundDir
     }
 
-    private fun copyTemplateToPlayground(configuration: TestConfiguration, testingPlaygroundDir: Path): Path {
+    private fun copyTemplateToPlayground(configuration: TestConfiguration, testingPlaygroundDir: Path, dockerFilePath: Path): Path {
         if (configuration.templatePath == null) { throw TemplateFileNotSetException(configuration) }
-        if (configuration.dockerFilePath == null) { throw DockerFileNotSetException(configuration) }
 
         val templatePath = Paths.get(configuration.templatePath!!)
-        val dockerFilePath = Paths.get(configuration.dockerFilePath!!)
 
         if (Files.notExists(templatePath)) { throw TemplateFileNotExistException(templatePath) }
-        if (Files.notExists(dockerFilePath)) { throw DockerFileNotExistException(dockerFilePath) }
 
         val templateZipLocation = Files.copy(templatePath, testingPlaygroundDir.resolve(templatePath.fileName))
         val unzipTemplateLocation = unzipFile(templateZipLocation, testingPlaygroundDir.resolve(Paths.get(TEMPLATE_DIR_NAME)))

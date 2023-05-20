@@ -36,7 +36,7 @@ class SolutionControllerV1(
         return ResponseEntity.ok(result.toDto())
     }
 
-    @GetMapping("/solution/{id}")
+    @GetMapping("/solution/{id}/download")
     @DownloadSolutionEndpointV1
     @CrossOrigin
     @PreCourseAuthorize
