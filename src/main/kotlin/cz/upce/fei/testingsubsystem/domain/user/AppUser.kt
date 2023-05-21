@@ -38,4 +38,19 @@ data class AppUser(
     override fun toString(): String {
         return "AppUser(id=$id, stagId='$stagId', mail='$mail', displayName='$displayName', registrationDate=$registrationDate, lastAccessDate=$lastAccessDate, disabled=$disabled)"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as AppUser
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+
 }
