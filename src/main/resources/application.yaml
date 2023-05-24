@@ -8,10 +8,28 @@ jwt:
 
 check-man:
   solution:
-    location: /tmp/check-man/solutions
+    location: /tmp/check-man/solution
   template:
-    location: /tmp/check-man/templates
+    location: /tmp/check-man/template
   playground:
     location: /tmp/check-man/playground
   docker-files:
     location: /tmp/check-man/docker-files
+
+  modules:
+    container:
+      max-memory: 536870912
+    gradle:
+      volume:
+        container-path: /playground/app/build/test-results
+      container:
+        timeout: 50
+
+my:
+  group: ${group}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB

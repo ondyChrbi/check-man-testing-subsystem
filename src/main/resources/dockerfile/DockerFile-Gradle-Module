@@ -1,0 +1,16 @@
+FROM gradle:8.0.2-jdk19 AS build
+
+WORKDIR /playground
+
+COPY template/settings.gradle template/gradlew template/gradlew.bat /playground/
+COPY template/gradle /playground/gradle
+COPY template/app/build.gradle /playground/app/build.gradle
+COPY template/app/src/test /playground/app/src/test
+
+COPY solution/app/src/main /playground/app/src/main
+
+RUN mkdir -p /playground/app/build/test-results
+
+VOLUME /playground/app/build/test-results
+
+RUN chmod -R 777 .

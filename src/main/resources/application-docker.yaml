@@ -1,4 +1,6 @@
 spring:
+  security:
+    permit_paths: /v3/api-docs/**, /swagger-ui.html, /swagger-ui/**, /webjars/swagger-ui/**, /webjars/**
   datasource:
     url: jdbc:postgresql://localhost:5432/checkman
     username: checkman
@@ -11,18 +13,23 @@ server:
   port: 9003
 
 check-man:
+  security:
+    origins: http://localhost:3000, http://localhost:3001
+    headers: '*'
+    methods: '*'
   solution:
-    location: /tmp/check-man/solutions
+    location: /tmp/check-man/solution
   template:
-    location: /tmp/check-man/templates
+    location: /tmp/check-man/template
   playground:
     location: /tmp/check-man/playground
   docker-files:
     location: /tmp/check-man/docker-files
 
+  modules:
+    gradle:
+      volume:
+        container-path: /playground/app/build/test-results
+
 jwt:
   expiration: 2147483647
-
-logging:
-  level:
-    cz.upce.fei.testingsubsystem.service: DEBUG
